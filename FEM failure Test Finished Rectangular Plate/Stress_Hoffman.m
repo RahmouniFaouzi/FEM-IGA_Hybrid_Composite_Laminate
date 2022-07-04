@@ -1,0 +1,46 @@
+function [stress_layer,Hoffman_max,Pli_etude,effort_min,failure_C] = Stress_Hoffman( ndof,Nlyer,...
+    numberElements,elementNodes,numberNodes,nodeCoordinates,...
+    qbarra,U,strength,theta,CLS, quadTypeB)
+
+Hoffman_max=0;
+effort_min=9999999;
+Pli_etude = 0;
+count = 1;
+
+% normal stresses in each layer
+stress_layer = zeros(3,Nlyer,numberNodes);
+
+% Gauss quadrature for bending part
+[gaussWeights,gaussLocations] = gaussQuadrature(quadTypeB);
+
+% cycle for element
+for e = 1:numberElements
+    
+    indice = elementNodes(e,:);
+    indiceB = [indice indice+numberNodes];
+    
+    % cycle for Gauss point
+    for q = 1:size(gaussWeights,1)
+        pt = gaussLocations(q,:);
+        xi = pt(1);
+        eta = pt(2);
+        
+        % Membrane
+        B_m = call_Bm( xi,eta,'Q4', nodeCoordinates(indice,:), ndof);
+        
+        % Strainess
+        strain = B_m*U(indiceB);
+        
+        % Stress
+        for J = 1 : Nlyer
+            stress_layer(:,J,count) = qbarra(1:3,1:3,J)*strain;
+        end
+        Str_G = stress_layer(:,:,count);
+        count = count +1;
+        
+        % Failures Criteria
+        [Hoffman_max,Pli_etude,~,effort_min, failure_C] = Hoffman_failure(Nlyer,CLS,Str_G,strength, theta,Hoffman_max,Pli_etude,effort_min);
+        
+    end % end Gauss point loop
+end % end element loop
+end
