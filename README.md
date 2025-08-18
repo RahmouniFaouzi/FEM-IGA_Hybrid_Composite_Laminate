@@ -36,6 +36,7 @@ The developed IGA integrates **CAD-based NURBS representation** with numerical a
 *  Compares results with **FEM (ANSYS)** and **Autodesk Helius Composite**
 
 ## Test
+This project includes a C implementation of the function NURBS2Dders for computing NURBS basis function derivatives efficiently. To use this version, you need to compile the MEX file.
 This code is developed under Matlab® implementation, it should be able to run on any operating system.
 
 ## License
