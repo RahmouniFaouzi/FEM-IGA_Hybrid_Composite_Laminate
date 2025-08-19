@@ -1,4 +1,3 @@
-
 close all
 clear
 clc
@@ -47,7 +46,6 @@ CtrlPts(1 : 3, 1, 1) = [0; 0; 0];
 CtrlPts(1 : 3, 2, 1) = [L; 0; 0];
 CtrlPts(1 : 3, 1, 2) = [0; D; 0];
 CtrlPts(1 : 3, 2, 2) = [L; D; 0];
-
 CtrlPts(4, :, :) = 1; % Wight
 
 KntVect{1} = [0 0 1 1];
@@ -70,7 +68,6 @@ nely = 10;             % knot insertion  --> H-rafinment
 % h+p = k-refinements
 Surf = KRefine(KntVect, CtrlPts, [nelx, nely], [p, q], [p-kx, q-ky]);
 
-
 figure
 hold on
 axis equal
@@ -89,7 +86,6 @@ for ii = 1 : size(theta,1)
     thetadt = theta(ii,:);
     fprintf('===================================================\n\n')
     fprintf(['Theta Sequense is: [', repmat('%g, ', 1, numel(thetadt)-1), '%g]\n'], thetadt)
-    
     
     [W,Q] = quadrature(  noGPs, 'GAUSS', 2 );
     
@@ -131,18 +127,14 @@ for ii = 1 : size(theta,1)
             Eta     = parent2ParametricSpace(etaE,pt(2));
             J2      = jacobianPaPaMapping(xiE,etaE);
             
-            
             % compute NURBSderivative of basis functions w.r.t parameter coord
-            
             [dRdxi , dRdeta] = NURBS2Dders([Xi; Eta],p,q,uKnot,vKnot,weights');
             
             % compute the jacobian of physical and parameter domain mapping
             % then the derivative w.r.t spatial physical coordinates
-            
             pts = controlPts(sctr,:);
             
             % Jacobian matrix
-            
             jacob(1,1) = dRdxi  * pts(:,1);
             jacob(1,2) = dRdeta * pts(:,1);
             jacob(2,1) = dRdxi  * pts(:,2);
@@ -151,7 +143,6 @@ for ii = 1 : size(theta,1)
             J1         = det(jacob);
             
             % Jacobian inverse and spatial derivatives
-            
             dRdx       = [dRdxi' dRdeta']/jacob;
             
             % B matrix
@@ -168,7 +159,6 @@ for ii = 1 : size(theta,1)
             
             % compute elementary stiffness matrix and
             % assemble it to the global matrix
-            
             K(sctrB,sctrB) = K(sctrB,sctrB) + B' * AMatrix * B * J1 * J2 * wt; %#ok<*SPRIX>
         end
     end
@@ -257,7 +247,7 @@ for ii = 1 : size(theta,1)
     
     Ds = 1:size(Str,3);
     
-    figure(ii+1);
+    figure
     hold on
     plot(Ds,Pr1,'-o');plot(Ds,Pr2,'-o');plot(Ds,Pr3,'-*');
     title('stress', 'FontSize', 20);
@@ -266,3 +256,4 @@ for ii = 1 : size(theta,1)
 end
 H = gca;
 H.LineWidth = 1.5; 
+
