@@ -1,10 +1,11 @@
 function [S_Point,Ed_Point] =  Boundry_Par(controlPts,noElemsU,...
     noElemsV, Side , q, p ,L, D)
 
-RightNodes = find(controlPts(:,1)==L)';
-LeftNodes  = find(controlPts(:,1)==0)';
-UpNodes    = find(controlPts(:,2)==D)';
-DownNodes  = find(controlPts(:,2)==0)';
+tolerance = 1e-6;
+RightNodes = find(abs(controlPts(:,1) - L) < tolerance)';
+LeftNodes  = find(abs(controlPts(:,1) - 0) < tolerance)';
+UpNodes    = find(abs(controlPts(:,2) - D) < tolerance)';
+DownNodes  = find(abs(controlPts(:,2) - 0) < tolerance)';
 
 rightPoints     = controlPts(RightNodes,:);
 leftPoints      = controlPts(LeftNodes,:);
@@ -47,5 +48,6 @@ else
     disp ('error -->> INVALID NPUT')
 end
 end
+
 
 
